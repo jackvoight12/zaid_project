@@ -1,4 +1,4 @@
-function [Hsig, Tpeak, time, freq, Sf ] = extractWaveData(filename, splot);
+function [Hsig, Tpeak, time, freq, Sf,Hsig_s,Hsig_w] = extractWaveData(filename);
 %% extractWaveData
 % splot is a switch to turn the plot on and off
 % filename = "noaa data here"
@@ -23,7 +23,7 @@ freq = Data(1,:);
 Sf = Data(2:end,:);
 
 % Puts time and frequency into 2-D grid matrices
-[Xg,Yg] = ndgrid(time,freq);
+
 
 % Hsig and Tpeak variables declared 
 Hsig = [];
@@ -37,36 +37,33 @@ for i = 1:length(time)
     Tpeak(i) = 1./Fpeak;
 end
 
+cutoff = 0.1; % seperation freq between wind wave and swell band
+
+% to get wind wave band spectrum
+xw = find(freq>cutoff);
+Sfw = Sf(:,xw);
+fw = freq(xw);
+
+% to get swell band spectrum
+xs = find(freq<=cutoff);
+Sfs = Sf(:,xs);
+fs = freq(xs);
+
+for i = 1:length(time)
+    Hsig_w(i) = 4*sqrt(nansum(Sfw(i,:).*gradient(fw)));
+%     [~,id] = max(Sf(i,:));
+%     Fpeak = freq(id);
+%     Tpeak(i) = 1./Fpeak;
+end
+
+for i = 1:length(time)
+    Hsig_s(i) = 4*sqrt(nansum(Sfs(i,:).*gradient(fs)));
+%     [~,id] = max(Sf(i,:));
+%     Fpeak = freq(id);
+%     Tpeak(i) = 1./Fpeak;
+end
+
 %convert time to yyyymmddHHMMSS format
 
-% if loop only plots if splot = 1
-if splot == 1
-    % Plots spectra * freq * time/ time * Tpeak/ time * Hsig
-    figure
-    subplot(3,1,1 )
-    pc = pcolor(Xg,Yg, log10(Sf));
-    set(pc,'EdgeColor','none')
-    set(gca, 'YScale', 'log')
-    shading interp;
-   % caxis([1 5])
-    colormap jet;
-    colorbar;
-    xlabel('Time')
-    ylabel('Freq');
-    ylim([0.05 0.5])
 
-
-    subplot(3,1,2)
-    plot(time,Hsig);
-    xlabel('time');
-    ylabel('Hsig (m)');
-    
-    subplot(3,1,3)
-    plot(time,Tpeak);
-    xlabel('time');
-    ylabel('Tpeak (s)');
-
-    
-else
-end
 end
