@@ -3,12 +3,16 @@ function [NDensity, NDensity_w, NDensity_s, X, Y, X_w, Y_w, Y_s, X_s] = hist_wav
 
 
 Data = [Hsig;Tpeak]';
+Data_w = [Hsig_w;Tpeak_w]';
+Data_s = [Hsig_s;Tpeak_s]';
 
 Density = hist3(Data,'nbins',[N N]);
+Density_w = hist3(Data_w,'nbins',[N N]);
+Density_s = hist3(Data_s,'nbins',[N N]);
 
 NDensity = (Density./length(Hsig)).*100;
-NDensity_w = (Density./length(Hsig_w)).*100;
-NDensity_s = (Density./length(Hsig_s)).*100;
+NDensity_w = (Density_w./length(Hsig_w)).*100;
+NDensity_s = (Density_s./length(Hsig_s)).*100;
 
  Y = linspace(min(Hsig),max(Hsig),N);
  X = linspace(min(Tpeak),max(Tpeak),N);
