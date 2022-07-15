@@ -1,4 +1,4 @@
-function [Hsig, Tpeak, time, freq, Sf,Hsig_s,Hsig_w] = extractWaveData(filename);
+function [Hsig, Tpeak, time, freq, Sf, Hsig_s, Hsig_w,Tpeak_s, Tpeak_w, fs, fw] = extractWaveData(filename);
 %% extractWaveData
 % splot is a switch to turn the plot on and off
 % filename = "noaa data here"
@@ -6,7 +6,7 @@ function [Hsig, Tpeak, time, freq, Sf,Hsig_s,Hsig_w] = extractWaveData(filename)
 %splot = 1; 
 dat = importdata(filename);
 
-%%
+% Organize and comile data to be used
 Textdata = dat.textdata;
 Data = dat.data;
 
@@ -51,19 +51,19 @@ fs = freq(xs);
 
 for i = 1:length(time)
     Hsig_w(i) = 4*sqrt(nansum(Sfw(i,:).*gradient(fw)));
-%     [~,id] = max(Sf(i,:));
-%     Fpeak = freq(id);
-%     Tpeak(i) = 1./Fpeak;
+    [~,id] = max(Sfw(i,:));
+    Fpeak_w = fw(id);
+    Tpeak_w(i) = 1./Fpeak_w;
 end
 
 for i = 1:length(time)
     Hsig_s(i) = 4*sqrt(nansum(Sfs(i,:).*gradient(fs)));
-%     [~,id] = max(Sf(i,:));
-%     Fpeak = freq(id);
-%     Tpeak(i) = 1./Fpeak;
+    [~,id] = max(Sfs(i,:));
+    Fpeak_s = fs(id);
+    Tpeak_s(i) = 1./Fpeak_s;
 end
 
-%convert time to yyyymmddHHMMSS format
+
 
 
 end
