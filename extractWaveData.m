@@ -1,28 +1,45 @@
 function [Hsig, Tpeak, time, freq, Sf, Hsig_s, Hsig_w,Tpeak_s, Tpeak_w, fs, fw] = extractWaveData(filename);
 %% extractWaveData
-% splot is a switch to turn the plot on and off
-% filename = "noaa data here"
-%filename = "2021_data.txt";
-%splot = 1; 
+% This function takes a year of spectral wave density data from the
+% national data buoy center and converts it into 11 different output values
+% that are then used by test_code to make three varying histograms and
+% three varying plots. 
+%% Input: 
+% filename (Spectral wave density data per year NOAA)  
+%% Output:
+% Hsig: Significant wave height otherwise known as the mean wave height for 
+% the highest third of waves
+% Tpeak: Wave period
+% time: time as given by data; is used to plot numerous x-axes
+% freq: frequency of wave, used to split Hsig and Tpeak further, acquire
+% wind and swell data, and plot with pcolor in test_code
+% Sf: Wave spectra 
+% Hsig_s: Significant wave height for swell 
+% Hsig_w: Significant wave height for wind 
+% Tpeak_s: Wave period for swell 
+% Tpeak_w: Wave period for wind
+% fs: swell frequency
+% fw: wind frequency
+% Output provides data to plot in test_code 
 dat = importdata(filename);
 
-% Organize and comile data to be used
+% Organize and compiles dates to be used in datetime format
 Textdata = dat.textdata;
 Data = dat.data;
 
+% Puts dates into cell and then puts cell into format fit to label plots
 X = cell2mat(Textdata(2:end,:));
-
-% for check time header  dat.textdata(1,:)
-
-
-
-%time = datetime(X,'yyyymmddHHMM');
 time = datetime(X,'InputFormat', 'yyyyMMddHHmm');
 
+% States which columns are which data values 
 freq = Data(1,:);
 Sf = Data(2:end,:);
 
-% Puts time and frequency into 2-D grid matrices
+% Sets a minimum value for frequency and spectra so data is plotted
+% correctly
+x = find(freq>=0.045);
+freq = freq(x);
+Sf = Sf(:,x);
 
 
 % Hsig and Tpeak variables declared 
@@ -49,6 +66,7 @@ xs = find(freq<=cutoff);
 Sfs = Sf(:,xs);
 fs = freq(xs);
 
+% Calculates significant wave height and Tpeak for wind waves
 for i = 1:length(time)
     Hsig_w(i) = 4*sqrt(nansum(Sfw(i,:).*gradient(fw)));
     [~,id] = max(Sfw(i,:));
@@ -56,6 +74,7 @@ for i = 1:length(time)
     Tpeak_w(i) = 1./Fpeak_w;
 end
 
+% Calculates significant wave height and Tpeak for swell bands
 for i = 1:length(time)
     Hsig_s(i) = 4*sqrt(nansum(Sfs(i,:).*gradient(fs)));
     [~,id] = max(Sfs(i,:));
