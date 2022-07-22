@@ -1,13 +1,21 @@
 function [NDensity, NDensity_w, NDensity_s, X, Y, X_w, Y_w, Y_s, X_s] = hist_wave(Hsig,Tpeak,Hsig_w,Tpeak_w,Hsig_s,Tpeak_s,N)
 %% hist_wave
-% This function creates data to plot histograms on test_code from the data
-% recieved from extractWaveData along with N, which is a constant decided
-% within test_code
+% This function performs joint probability distrubution on data
+% recieved from extractWaveData to create data that is fit to put into a
+% histogram.
 %% Input: 
-% Hsig,Tpeak,Hsig_w,Tpeak_w,Hsig_s,Tpeak_s defined in extractWaveData;
-% Outputs
+% Hsig: Significant wave height (m) 
+% Tpeak: Peak wave period, the wave period associated with the most 
+% energetic waves in the total wave spectrum at a specific point; derived 
+% from the waves spectra; measured in seconds (s)
+% Hsig_w: Significant wave height for wind waves (m)
+% Tpeak_w: Peak wave period for wind;  constructed with frequency and adjacent
+% inputs adjusted to only include wind wave data(s)
+% Hsig_s: Significant wave height for swell; (m)
+% Tpeak_s: Peak wave period for swell; constructed with frequency and adjacent
+% inputs adjusted to only include swell data(s)
 % N: value that determines size and shape of the plot; can be changed upon
-% discretion of user
+% discretion of user, assign value on test_code
 %% Output:
 % NDensity: density of our data adjusted to the length of Hsig 
 % NDensity_w: NDensity adjusted to wind waves

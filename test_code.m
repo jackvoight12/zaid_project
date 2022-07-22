@@ -1,17 +1,20 @@
 
 %% extractWaveData Input
-filename = "C:\Users\voightj22\Desktop\zaid_project\2021_data.txt";
+filename = "C:\Users\voightj22\Desktop\zaid_project\2020_data.txt";
 
 %% extractWaveData function and outputs 
  [Hsig, Tpeak, time, freq, Sf,Hsig_s,Hsig_w, Tpeak_s, Tpeak_w, fs, fw] = extractWaveData(filename);
 
 %% histwave function and output
- [NDensity, NDensity_w, NDensity_s, X, Y, X_w, Y_w, Y_s, X_s] = hist_wave(Hsig,Tpeak,Hsig_w,Tpeak_w,Hsig_s,Tpeak_s,N);
- N = 20;
+% Adjust N below
+N = 20; 
+[NDensity, NDensity_w, NDensity_s, X, Y, X_w, Y_w, Y_s, X_s] = hist_wave(Hsig,Tpeak,Hsig_w,Tpeak_w,Hsig_s,Tpeak_s,N);
+ 
 
 %% make plot
-  figure
-
+  
+    f = figure;
+    f.Position = [100 100 1500 1000];
     %% Plots histograms
     %% Total 
     [Xg,Yg] = ndgrid(time,freq);
@@ -56,7 +59,7 @@ filename = "C:\Users\voightj22\Desktop\zaid_project\2021_data.txt";
     shading interp;
     colormap jet;
     b = colorbar;
-    ylabel(b, 'm^2/Hz')
+    ylabel(b, 'log(m^2/Hz)')
     xlabel('Time');
     ylabel('Freq');
     ylim([0.05 0.5])
@@ -83,6 +86,12 @@ filename = "C:\Users\voightj22\Desktop\zaid_project\2021_data.txt";
     hold on; 
     plot(time, Tpeak_s, 'k')
     legend('total','wind wave','swell')
+    
+    %% Change file name each save
+    % Format: bulkwaveparameter_year_station# 
+    savefig('bulkwaveparameter_2003_41025')
+    saveas(f, 'bulkwaveparameter_2003_41025.jpg')
+   
 
 
 

@@ -1,25 +1,31 @@
 function [Hsig, Tpeak, time, freq, Sf, Hsig_s, Hsig_w,Tpeak_s, Tpeak_w, fs, fw] = extractWaveData(filename);
 %% extractWaveData
-% This function takes a year of spectral wave density data from the
+% This function takes anywhere from a week to a year of spectral wave density data from the
 % national data buoy center and converts it into 11 different output values
 % that are then used by test_code to make three varying histograms and
 % three varying plots. 
 %% Input: 
-% filename (Spectral wave density data per year NOAA)  
+% filename (Spectral wave density data per year NOAA); file should be in
+% .txt formatting; #YY  MM DD hh mm in top left
 %% Output:
 % Hsig: Significant wave height otherwise known as the mean wave height for 
-% the highest third of waves
-% Tpeak: Wave period
-% time: time as given by data; is used to plot numerous x-axes
-% freq: frequency of wave, used to split Hsig and Tpeak further, acquire
-% wind and swell data, and plot with pcolor in test_code
-% Sf: Wave spectra 
-% Hsig_s: Significant wave height for swell 
-% Hsig_w: Significant wave height for wind 
-% Tpeak_s: Wave period for swell 
-% Tpeak_w: Wave period for wind
-% fs: swell frequency
-% fw: wind frequency
+% the highest third of waves; measured in meters (m)
+% Tpeak: Peak wave period, the wave period associated with the most 
+% energetic waves in the total wave spectrum at a specific point; derived 
+% from the waves spectra; measured in seconds (s)
+% time: time as given by data; is used to plot numerous x-axesl usually in 
+% freq: wave frequency, used to split Hsig and Tpeak further, acquire
+% wind and swell data, and plot with pcolor in test_code; measured in Hertz (Hz)
+% Sf: Wave spectra; used to describe the distrubution of energy at different
+% freq; meters squared per second (m^2/s)  
+% Hsig_s: Significant wave height for swell; (m)
+% Hsig_w: Significant wave height for wind; (m) 
+% Tpeak_s: Peak wave period for swell; constructed with frequency and adjacent
+% inputs adjusted to only include swell data(s)
+% Tpeak_w: Peak wave period for wind;  constructed with frequency and adjacent
+% inputs adjusted to only include wind wave data(s)
+% fs: swell frequency; frequency below 0.1 Hz is identifiable as swell (Hz)
+% fw: wind frequency;frequency above 0.1 Hz can be identified as wind waves (Hz)
 % Output provides data to plot in test_code 
 dat = importdata(filename);
 
@@ -82,7 +88,7 @@ for i = 1:length(time)
     Tpeak_s(i) = 1./Fpeak_s;
 end
 
-
-
-
+filename1 = 'extractWaveData_2020_41025.mat';
+save(filename1,'Hsig', 'Tpeak', 'time', 'freq', 'Sf', 'Hsig_s', 'Hsig_w','Tpeak_s', 'Tpeak_w', 'fs', 'fw')
 end
+
